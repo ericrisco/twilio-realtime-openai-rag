@@ -4,7 +4,7 @@ check_stock_tool_definition = {
     "type": "function",
     "name": "check_stock",
     "description": (
-        "Allows the user to check the stock availability of a product in the ecommerce store. "
+        "Allows the user to check the stock availability of a product in the e-commerce store. "
         "It returns the number of units available in stock for the specified product."
     ),
     "parameters": {

@@ -1,17 +1,12 @@
 
 import os
 from fastapi.responses import Response
-from dotenv import load_dotenv
 
-load_dotenv()
-
-WEBSOCKET_URL = os.getenv("WEBSOCKET_URL")
-
-def twilio_stream():
+def twilio_stream(host: str):
     response = f"""
     <Response> 
         <Connect>
-            <Stream url="wss://{WEBSOCKET_URL}/stream/websocket" />
+            <Stream url="wss://{host}/stream/websocket" />
         </Connect>
     </Response>
     """

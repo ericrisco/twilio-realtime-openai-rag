@@ -24,14 +24,14 @@ The **Realtime API** enables you to build low-latency, multi-modal conversationa
 ### Key Benefits of the Realtime API
 
 - **Native speech-to-speech**: The API operates without text as an intermediary, reducing latency and delivering more nuanced, natural output.
-- **Natural, steerable voices**: The models can produce natural inflections, including features like laughing and whispering, while adhering to specific tonal directions.
+- **Natural, steerable voices**: The models can produce natural inflections, including features like **laughing and whispering**, while adhering to specific tonal directions.
 - **Simultaneous multimodal output**: While text can be useful for moderation or logging, the audio is faster-than-realtime, ensuring stable playback.
   
 This API is **websocket-based**, marking the first time OpenAI has published an API capable of sending and receiving audio in real time. It's designed to provide developers with a seamless way to build conversational applications that require instant responses.
 
 ### Important Considerations
 
-- **Beta Stage**: The Realtime API is currently in beta and does not offer client-side authentication. For security, audio must be relayed to a server to authenticate securely.
+- **Beta Stage**: The Realtime API is currently in beta and does not offer client-side authentication. For security, audio must be **relayed to a server to authenticate securely**.
 - **Network Sensitivity**: Real-time audio experiences can be affected by network conditions, especially when delivering audio reliably to a server. This makes production-scale use challenging in client-side or telephony applications where network conditions may vary.
   
 For production use, especially in environments where network reliability is unpredictable, it is recommended to evaluate purpose-built third-party solutions or integrate with trusted partners, as listed by OpenAI.
@@ -73,11 +73,6 @@ Before you begin, ensure you have the following:
 
     ![Real-time OpenAI Architecture](images/webhook_config.png)
 
-3. **Set up the WEBSOCKET_URL**:
-   - In your `.env` file, you need to define the `WEBSOCKET_URL`. This is the URL where Twilio will establish a WebSocket connection to stream the voice call to your service.
-   - Example:
-     WEBSOCKET_URL=your-domain.com
-   - Make sure this URL is publicly accessible.
 
 ### Running Locally
 
@@ -97,9 +92,9 @@ If you want to run the service locally, you will need to create a public endpoin
 ```bash
 VOICE = 'echo'
 OPENAI_API_KEY = 'your_openai_key'
-WEBSOCKET_URL= 'your_ngrok_url'
 PORT=5000
 ```
+
 
 ## 🛠️ Installation
 
@@ -121,7 +116,6 @@ PORT=5000
    ```bash
     VOICE = 'echo'
     OPENAI_API_KEY = 'your_openai_key'
-    WEBSOCKET_URL= 'your_ngrok_url'
     PORT=5000
    ```
 

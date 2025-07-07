@@ -1,0 +1,30 @@
+{    
+
+"editor.formatOnSave": true,
+"editor.defaultFormatter": null, 
+"[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    }
+},
+"[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one" 
+},
+"[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml" 
+},
+"[csv]": {
+    "editor.defaultFormatter": "mechatroner.rainbow-csv" 
+},
+    "cSpell.words": [
+        "dotenv",
+        "uvicorn",
+        "fastapi",
+        "dotenv" 
+    ], 
+    "cSpell.enabled": true, 
+	"cSpell.language": "es,en", 
+	"cSpell.dictionaries": ["spanish", "english"] 
+
+}

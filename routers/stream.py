@@ -1,14 +1,17 @@
-import aiohttp
 import asyncio
 import json
 import logging
-import traceback
 import os
+import traceback
+
+import aiohttp
 from dotenv import load_dotenv
-from fastapi import Request, WebSocket, WebSocketDisconnect, APIRouter
+from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
+
 from helpers.twilio import twilio_stream
 from helpers.voice_system_prompt import SYSTEM_MESSAGE
-from services.openai_functions import welcome_message, send_session_update, generate_audio_response
+from services.openai_functions import (generate_audio_response,
+                                       send_session_update, welcome_message)
 from tools.execute_tool import execute_tool
 
 stream_router = APIRouter()
@@ -20,12 +23,13 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 @stream_router.api_route("/stream/incoming-call", methods=["GET", "POST"])
 async def handle_incoming_call(request: Request):
     logging.info("Stream Incoming call received.")
-    return twilio_stream()
+    host = request.url.hostname
+    return twilio_stream(host)
 
 @stream_router.websocket("/stream/websocket")
-async def handle_media_stream(websocket: WebSocket):
+async def handle_media_stream(twilio_websocket: WebSocket):
     logging.info("Stream WebSocket connection established.")
-    await websocket.accept()
+    await twilio_websocket.accept()
 
     async with aiohttp.ClientSession() as session:
         async with session.ws_connect(
@@ -41,7 +45,7 @@ async def handle_media_stream(websocket: WebSocket):
             async def receive_from_twilio():
                 nonlocal stream_sid
                 try:
-                    async for message in websocket.iter_text():
+                    async for message in twilio_websocket.iter_text():
                         data = json.loads(message)
                         if data['event'] == 'media' and not openai_ws.closed:
                             audio_append = {
@@ -70,6 +74,10 @@ async def handle_media_stream(websocket: WebSocket):
                             await welcome_message(openai_ws)                            
 
                         if response['type'] == 'response.function_call_arguments.done':
+                            """
+                            The LLM has finished providing all the necessary arguments for the requested function call.
+                            The application can now proceed to execute the specified function using the provided arguments.
+                            """
                             logging.debug(f"Function call arguments received. => {stream_sid}: {response}")
                             result = await execute_tool(response)
                             await generate_audio_response(stream_sid, openai_ws, result['result'])
@@ -82,7 +90,7 @@ async def handle_media_stream(websocket: WebSocket):
                                     "payload": response['delta']
                                 }
                             }
-                            await websocket.send_json(audio_delta)
+                            await twilio_websocket.send_json(audio_delta)
 
                 except Exception as e:
                     logging.error(f"Error in send_to_twilio: {stream_sid} {e} - {traceback.format_exc()}")
